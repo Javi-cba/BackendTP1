@@ -9,12 +9,16 @@ npm install pg
 
 LEVANTAR SERV GATEWAY:
 node .
-    
+
 LEVANTAR LOS MICRO-SERV:
 node micPostUser.js
 node MicSuspenderUser.js
 node MicHabilitarUser.js
 node micPostRole.js
+
+COLECCION EN POSTMAN:
+https://dark-rocket-521253.postman.co/workspace/Team-Workspace~b9b729eb-1edc-4cba-8af5-30e173b3f8d2/collection/26619184-b24395c2-7e76-40dd-9f36-7a1c063d0a64?action=share&creator=26619184
+
 
 -------------------
 MI '.env':
