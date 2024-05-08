@@ -21,8 +21,7 @@ const pool = new Pool({
 
         await client.query(`
         CREATE TABLE IF NOT EXISTS role(
-            id SERIAL PRIMARY KEY,
-            idRole INT NOT NULL,
+            id SERIAL PRIMARY KEY,           
             tipoRol VARCHAR(55) NOT NULL
          
         )`);
@@ -40,7 +39,7 @@ const pool = new Pool({
 app.post('/role',async (req, res) => {
     const client= await pool.connect();         
     try {
-        await client.query('INSERT INTO role (idRole, tipoRol) VALUES ($1, $2)',[req.body.idRole, req.body.tipoRol]);
+        await client.query('INSERT INTO role (tipoRol) VALUES ($1)',[req.body.tipoRol]);
         res.send("Role creado con exito");
     }catch (e) {
         console.log(e);
@@ -48,7 +47,7 @@ app.post('/role',async (req, res) => {
     }finally {
         client.release();
     }
-    })
+    })  
 
 // LISTA ROLES, YA EXISTEN (1 ADMINISTRADOR,2 SUPERVISOR,3 USUARIO)
 app.get('/role',async (req, res) => {
@@ -67,6 +66,20 @@ app.get('/role',async (req, res) => {
         client.release();
     }
     })
+
+    // DROP COMUN OF role
+    app.delete('/role',async (req, res) => {
+        const client= await pool.connect();         
+        try {
+        await client.query('ALTER TABLE role DROP COLUMN idRole');
+            res.send("id Roles con exito");
+        }catch (e) {
+            console.log(e);
+            res.send(e);
+        }finally {
+            client.release();
+        }
+        })
 
 app.listen(PORT, () => {
     console.log(`Servidor de PostRole levantado en http://localhost:${PORT}`);

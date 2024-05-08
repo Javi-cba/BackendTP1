@@ -31,7 +31,6 @@ const pool = new Pool({
         await client.query(`
         CREATE TABLE IF NOT EXISTS role(
             id SERIAL PRIMARY KEY,
-            idRole INT NOT NULL,
             tipoRol VARCHAR(55) NOT NULL
          
         )`);
@@ -51,8 +50,7 @@ app.get('/login',async (req, res) => {
     const { username, password } = req.query;
     const client= await pool.connect(); 
     try {
-        console.log(username, password);
-        const { rows } = await client.query('SELECT u.*, tipoRol FROM usuario AS u LEFT JOIN role AS r ON u.idRole = r.idRole WHERE username=$1 AND password= $2', [username, password]);
+        const { rows } = await client.query('SELECT u.*, tipoRol FROM usuario AS u LEFT JOIN role AS r ON u.idRole = r.id WHERE username=$1 AND password= $2', [username, password]);
         if(rows.length > 0){
             // ACA DEVOLVERÍA EL TOKEN TAMBIÉN
             //.....
@@ -74,7 +72,7 @@ app.get('/login',async (req, res) => {
 app.post('/user',async (req, res) => {
     const client= await pool.connect(); 
     try {
-        // vigencia=1 (usuHabilitado)
+        // vigencia=1 (usuHabilitado por defecto)
         await client.query('INSERT INTO usuario (nombre, username, password, idRole,vigencia) VALUES ($1, $2, $3, $4, 1)',[req.body.nombre,  req.body.username, req.body.password, req.body.idRole]);
         res.send("Usuario creado con exito");
     }catch (e) {
@@ -91,7 +89,7 @@ app.post('/user',async (req, res) => {
     app.get('/user',async (req, res) => {
         const client= await pool.connect(); 
         try {
-            const { rows } = await client.query('SELECT u.*, tipoRol FROM usuario AS u LEFT JOIN role AS r ON u.idRole = r.idRole');
+            const { rows } = await client.query('SELECT u.*, tipoRol FROM usuario AS u LEFT JOIN role AS r ON u.idRole = r.id');
             
                 res.send(rows);
            
