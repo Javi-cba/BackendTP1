@@ -26,9 +26,9 @@ app.get('/login',async (req, res) => {
             password: password
         }
     });
-     const token = response.data;//Devuelve el token si el login es valido
-    res.send(token);
-} catch (error) {
+     const resp = response.data;//Devuelve el token si el login es valido
+     res.json(resp);
+    } catch (error) {
     console.error( error);
 res.status(500).send("Error interno del servidor ENDPOINT-1");
 }
@@ -47,7 +47,7 @@ app.post('/user',async (req, res) => {
         idRole: idRole               
      });
       const resp = response.data;
-     res.send(resp);
+      res.json(resp);
  } catch (error) {
      console.error( error);
      res.status(500).send("Error interno del servidor ENDPOINT-2");
@@ -58,8 +58,8 @@ app.post('/user',async (req, res) => {
     try {
      const response = await axios.get(`http://localhost:${PORT2}/user`);
       const resp = response.data;
-     res.send(resp);
- } catch (error) {
+      res.json(resp);
+     } catch (error) {
      console.error( error);
      res.status(500).send("Error interno del servidor ENDPOINT-3");
  }
@@ -123,8 +123,8 @@ app.put('/suspenderuser',async (req, res) => {
      try {
         const response= await axios.get(`http://localhost:${PORT5}/role`);
         const resp = response.data;
-        res.send(resp);
-     } catch (error) {
+        res.json(resp);
+         } catch (error) {
         console.error( error);
         res.status(500).send("Error interno del servidor ENDPOINT-7");
      }
