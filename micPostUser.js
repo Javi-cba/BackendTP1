@@ -1,10 +1,12 @@
 const express = require('express');
 const { Pool } = require('pg');
 require('dotenv').config();
+const jwt = require('jsonwebtoken');
 
 const env = process.env;
 const app = express();
 const PORT = env.PORT2;
+const JWT_SECRET = process.env.JWT_SECRET;
 app.use(express.json());
 
 const pool = new Pool({
@@ -54,8 +56,7 @@ app.get('/login',async (req, res) => {
         if(rows.length > 0){
             // ACA DEVOLVERÍA EL TOKEN TAMBIÉN
             //.....
-            const token="TOKEN VALIDO: ..JWT..";
-          
+            const token = generateToken({ username });
             res.send({ user: rows[0], token: token });
         }else{
             res.send({error: "Usuario o contraseña incorrectos", token: null});
@@ -67,6 +68,11 @@ app.get('/login',async (req, res) => {
         client.release();
     }
 })
+
+//GENERA EL TOKEN
+const generateToken = (user) => {
+    return jwt.sign(user, JWT_SECRET, { expiresIn: '2h' });
+  };
 
 //REGISTTRAR USUARIOS
 app.post('/user',async (req, res) => {
